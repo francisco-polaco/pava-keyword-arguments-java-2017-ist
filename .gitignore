@@ -197,9 +197,5 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
-/utils.iml
 /.idea/
-/keystore.jceks
-/ivhash.dat
-/password-manager-client.iml
-/pava-project.iml
+*.iml
