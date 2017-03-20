@@ -51,6 +51,11 @@ public class TemplateMaker {
             }
         }
         ArrayList<CtField> classFields = getClassFields();
+        for ( CtField f : classFields) {
+            System.out.println("NAME: " + f.getName());
+        }
+
+
         if(!classFields.containsAll(keysmap.entrySet()))
             throw new RuntimeException("Invalid heywords arguments!");
 

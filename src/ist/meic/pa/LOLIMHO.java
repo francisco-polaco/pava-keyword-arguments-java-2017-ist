@@ -7,6 +7,6 @@ public class LOLIMHO extends Unknown {
 
     private String fdx;
 
-    @KeywordArgs("high=600; weight:100")
+    @KeywordArgs("high=600, weight=100")
     public LOLIMHO(Object... args) {}
 }
