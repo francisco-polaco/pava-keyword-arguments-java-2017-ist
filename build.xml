@@ -11,12 +11,12 @@
 
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete dir="${jar.dir}/${ant.project.name}.jar"/>
+        <delete file="${jar.dir}/${ant.project.name}.jar"/>
     </target>
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}"/>
     </target>
 
     <target name="jar" depends="clean,compile">
