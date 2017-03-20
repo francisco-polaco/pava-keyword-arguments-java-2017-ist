@@ -1,14 +1,16 @@
 package ist.meic.pa;
 
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtField;
-import javassist.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
+
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtField;
+import javassist.NotFoundException;
 
 /**
  * Created by francisco on 20/03/2017.
@@ -28,19 +30,39 @@ public class TemplateMaker {
         ArrayList<CtField> output = new ArrayList<>();
         CtClass auxclass = targetClass;
         do {
-            Collections.addAll(output, auxclass.getDeclaredFields());
+            Collections.addAll(output, (auxclass.getDeclaredFields()));
             auxclass = auxclass.getSuperclass();
         } while(auxclass != null && auxclass.getSuperclass()!= null &&!auxclass.getSuperclass().equals(auxclass));
         return output;
     }
 
+    /* ------- possible code ----------*/
+
+    private ArrayList<String> getClassFieldsNames() throws NotFoundException {
+        ArrayList<String> names = new ArrayList<>();
+        CtClass auxclass = targetClass;
+        do {
+            for (CtField f: auxclass.getDeclaredFields()) {
+                names.add(f.getName());
+            }
+            auxclass = auxclass.getSuperclass();
+        } while(auxclass != null && auxclass.getSuperclass()!= null &&!auxclass.getSuperclass().equals(auxclass));
+        return names;
+    }
+    /* ------- end of possible code ----------*/
 
     public void makeTemplate(String args) throws NotFoundException {
         System.out.println(args);
+        boolean simple = Pattern.matches("(([a-zA-Z]+)=[a-zA-Z0-9]+)?", args);
+        if(!simple) {
+            boolean complex = Pattern.matches("((([a-zA-Z]+)=[a-zA-Z0-9]+,?)*)", args);
+            if (!complex)
+                throw new BadKeyWordsException("Keyword arguments have a wrong format!");
+        }
 
         TreeMap<String, String> keysmap = new TreeMap<>();
         if(!args.equals("")) {
-            String[] keywords = args.trim().split(",");
+            String[] keywords = args.split(",");
             for (String keyword : keywords) {
                 String[] result = keyword.split("=");
                 if (result.length == 2)
@@ -55,10 +77,15 @@ public class TemplateMaker {
             System.out.println("NAME: " + f.getName());
         }
 
+        /* ------- possible code ----------*/
+        ArrayList<String> classFieldsNames = getClassFieldsNames();
 
-        if(!classFields.containsAll(keysmap.entrySet()))
-            throw new RuntimeException("Invalid heywords arguments!");
 
+
+        if(!classFieldsNames.containsAll(keysmap.keySet()))
+            throw new RuntimeException("Invalid keywords arguments!");
+
+        /* ------- end of possible code ----------*/
 
         for (Map.Entry<String, String> entry :
                 keysmap.entrySet()) {
