@@ -1,8 +1,6 @@
 package ist.meic.pa;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -21,45 +19,79 @@ public class TemplateMaker {
     private CtClass targetClass;
 
 
+
     public TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
         this.ctConstructor = ctConstructor;
         this.targetClass = targetClass;
     }
 
-    private ArrayList<CtField> getClassFields() throws NotFoundException {
-        ArrayList<CtField> output = new ArrayList<>();
-        CtClass auxclass = targetClass;
+    private TreeMap<String, CtField> getClassFields() throws NotFoundException {
+        TreeMap<String, CtField> output = new TreeMap<>();
+        CtClass auxClass = targetClass;
         do {
-            Collections.addAll(output, (auxclass.getDeclaredFields()));
-            auxclass = auxclass.getSuperclass();
-        } while(auxclass != null && auxclass.getSuperclass()!= null &&!auxclass.getSuperclass().equals(auxclass));
+            for(CtField f : auxClass.getDeclaredFields()){
+                if(!output.containsKey(f.getName())) {
+                    /*
+                     * If there is a field in a class and its super class
+                     * with the same name, we ignore the super class field.
+                    */
+                    output.put(f.getName(), f);
+                }
+            }
+            auxClass = auxClass.getSuperclass();
+        } while(auxClass != null && auxClass.getSuperclass()!= null && !auxClass.getSuperclass().equals(auxClass));
         return output;
     }
 
-    /* ------- possible code ----------*/
 
-    private ArrayList<String> getClassFieldsNames() throws NotFoundException {
-        ArrayList<String> names = new ArrayList<>();
-        CtClass auxclass = targetClass;
-        do {
-            for (CtField f: auxclass.getDeclaredFields()) {
-                names.add(f.getName());
-            }
-            auxclass = auxclass.getSuperclass();
-        } while(auxclass != null && auxclass.getSuperclass()!= null &&!auxclass.getSuperclass().equals(auxclass));
-        return names;
-    }
-    /* ------- end of possible code ----------*/
-
-    public void makeTemplate(String args) throws NotFoundException {
+    public void makeTemplate(String args) throws NotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         System.out.println(args);
-        boolean simple = Pattern.matches("(([a-zA-Z]+)=[a-zA-Z0-9]+)?", args);
-        if(!simple) {
-            boolean complex = Pattern.matches("((([a-zA-Z]+)=[a-zA-Z0-9]+,?)*)", args);
-            if (!complex)
-                throw new BadKeyWordsException("Keyword arguments have a wrong format!");
+        lexValidation(args);
+
+        TreeMap<String, String> keysmap = prepareMapArgsVal(args);
+
+        TreeMap<String, CtField> classFields = getClassFields();
+
+        System.out.println("CLASSFIELDS:");
+        for ( String key : classFields.keySet()) {
+            System.out.println("NAME: " + key + " Value: " + classFields.get(key));
         }
 
+        System.out.println("KEYMAP:");
+
+        for (Map.Entry<String, String> entry :
+                keysmap.entrySet()) {
+
+            System.out.println("Entry: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+        /* ------- possible code ----------*/
+
+        if(!classFields.keySet().containsAll(keysmap.keySet())) {
+            throw new RuntimeException("Invalid keywords arguments!");
+        }
+
+
+        for (String key : keysmap.keySet()) {
+            TypeParser parser = (TypeParser) Class.forName(this.getClass().getPackage() + "." +
+                    classFields.get(key).getType().getSimpleName() + "Parser").newInstance();
+            parser.parse(keysmap.get(key));
+
+
+
+
+            //getClass().forName()
+            //classFields.get(key).getType()
+
+
+            }
+
+
+
+        /* ------- end of possible code ----------*/
+
+    }
+
+    private TreeMap<String, String> prepareMapArgsVal(String args) {
         TreeMap<String, String> keysmap = new TreeMap<>();
         if(!args.equals("")) {
             String[] keywords = args.split(",");
@@ -72,34 +104,17 @@ public class TemplateMaker {
 
             }
         }
-        ArrayList<CtField> classFields = getClassFields();
-        for ( CtField f : classFields) {
-            System.out.println("NAME: " + f.getName());
+        return keysmap;
+    }
+
+
+    private void lexValidation(String args) {
+        boolean simple = Pattern.matches("(([a-zA-Z]+)=[a-zA-Z0-9]+)?", args);
+        if(!simple) {
+            boolean complex = Pattern.matches("((([a-zA-Z]+)=[a-zA-Z0-9]+,?)*)", args);
+            if (!complex)
+                throw new BadKeyWordsException("Keyword arguments have a wrong format!");
         }
-
-        /* ------- possible code ----------*/
-        ArrayList<String> classFieldsNames = getClassFieldsNames();
-
-
-
-        if(!classFieldsNames.containsAll(keysmap.keySet()))
-            throw new RuntimeException("Invalid keywords arguments!");
-
-        /* ------- end of possible code ----------*/
-
-        for (Map.Entry<String, String> entry :
-                keysmap.entrySet()) {
-
-            System.out.println("Entry: " + entry.getKey() + ", Value: " + entry.getValue());
-        }
-
-
-
-
-
-
-
-
     }
 
 }

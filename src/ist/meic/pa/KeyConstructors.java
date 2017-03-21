@@ -7,7 +7,7 @@ import javassist.NotFoundException;
 
 public class KeyConstructors {
 
-    public static void main(String[] args) throws NotFoundException, ClassNotFoundException {
+    public static void main(String[] args) throws NotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if(args.length != 1){
             System.out.println("Invalid arguments!");
             System.out.println("Usage: java " + KeyConstructors.class.getCanonicalName() + " <classname>");

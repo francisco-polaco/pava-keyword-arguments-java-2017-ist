@@ -5,7 +5,7 @@ public class Unknown {
 	private String high;
 	private String batata;
 
-
+	protected String ola;
 
 
 	@KeywordArgs("high=600,weight=100")
