@@ -71,6 +71,21 @@ public class TemplateMaker {
         }
 
 
+        // Assign variables which are in the arguments with multi levels
+        boolean changed = true;
+        while(changed){
+            changed = false;
+            for(Map.Entry<String,String> entry : keysmap.entrySet()) {
+                if (keysmap.containsKey(entry.getValue())) {
+                    entry.setValue(keysmap.get(entry.getValue()));
+                    changed = true;
+                }
+            }
+            if(!changed)
+                break;
+        }
+
+
         for (String key : keysmap.keySet()) {
             TypeParser parser = (TypeParser) Class.forName(this.getClass().getPackage() + "." +
                     classFields.get(key).getType().getSimpleName() + "Parser").newInstance();
