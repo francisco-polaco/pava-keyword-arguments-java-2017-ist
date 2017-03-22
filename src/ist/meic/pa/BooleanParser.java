@@ -7,7 +7,7 @@ public class BooleanParser implements TypeParser {
     @Override
     public void parse(String type) {
         if(!type.matches("true | false")) {
-            Object o = new ExpressionParser().parse(type, s);
+            Object o = new ExpressionParser().parse(type, "boolean");
             if(!o.getClass().getSimpleName().equals("Boolean"))
                 throw new RuntimeException("Invalid type match!");
         }

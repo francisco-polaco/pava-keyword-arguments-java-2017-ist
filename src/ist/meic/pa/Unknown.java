@@ -2,13 +2,13 @@ package ist.meic.pa;
 
 
 public class Unknown {
-	private String high;
-	private String batata;
+	private int high;
+	//private String batata;
 
-	protected String ola;
+	//protected String ola;
 
 
-	@KeywordArgs("high=600,weight=100")
+	@KeywordArgs("high=3+4")
 	public Unknown(Object... args) {}
 	
 	public String toString() {

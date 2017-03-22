@@ -7,7 +7,7 @@ public class FloatParser implements TypeParser {
     @Override
     public void parse(String type) {
         if(!type.matches("[0-9]+.?[0-9]*f?")) {
-            Object o = new ExpressionParser().parse(type);
+            Object o = new ExpressionParser().parse(type, "float");
             if(!o.getClass().getSimpleName().equals("Float"))
                 throw new RuntimeException("Invalid type match!");
         }

@@ -5,9 +5,11 @@ package ist.meic.pa;
  */
 public class LOLIMHO extends Unknown {
 
-    private String weight;
-    protected int ola;
+    //private String weight;
+    //protected int ola;
+    private double high;
+    private double xD;
 
-    @KeywordArgs("high=600,weight=100")
+    @KeywordArgs("high=3.0,xD=Math.sin(high)")
     public LOLIMHO(Object... args) {}
 }

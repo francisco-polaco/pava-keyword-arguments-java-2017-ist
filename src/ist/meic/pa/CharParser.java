@@ -7,7 +7,7 @@ public class CharParser implements TypeParser {
     @Override
     public void parse(String type) {
         if(!type.matches("\'.\'")) {
-            Object o = new ExpressionParser().parse(type, s);
+            Object o = new ExpressionParser().parse(type, "char");
             if(!o.getClass().getSimpleName().equals("Char"))
                 throw new RuntimeException("Invalid type match!");
         }

@@ -7,7 +7,7 @@ public class DoubleParser implements TypeParser {
     @Override
     public void parse(String type) {
         if(!type.matches("[0-9]+.?[0-9]*")) {
-            Object o = new ExpressionParser().parse(type, s);
+            Object o = new ExpressionParser().parse(type, "double");
             if(!o.getClass().getSimpleName().equals("Double"))
                 throw new RuntimeException("Invalid type match!");
         }
