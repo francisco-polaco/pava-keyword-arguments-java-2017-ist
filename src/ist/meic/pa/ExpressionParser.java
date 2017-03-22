@@ -11,25 +11,19 @@ import java.util.UUID;
  */
 public class ExpressionParser  {
 
-    public Object parse(String expression, String type) {
+    public Object parse(String expression, String type)
+            throws NotFoundException, CannotCompileException, InvocationTargetException, IllegalAccessException,
+            NoSuchMethodException {
         ClassPool pool = ClassPool.getDefault();
         CtClass ctEvaluator = pool.makeClass("Evaluator" + UUID.randomUUID());
         String template =
                 "public static " + type + " eval() { " +
                         " return ("+ expression +");" +
                         "}";
-        try {
-            //make(java.lang.String src, CtClass declaring, java.lang.String delegateObj, java.lang.String delegateMethod)
-
-            CtMethod ctMethod = CtNewMethod.make(template, ctEvaluator);
-            ctEvaluator.addMethod(ctMethod);
-            Class evaluator = ctEvaluator.toClass();
-            Method meth = evaluator.getDeclaredMethod("eval");
-            return meth.invoke(null);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("");
-        }
+        CtMethod ctMethod = CtNewMethod.make(template, ctEvaluator);
+        ctEvaluator.addMethod(ctMethod);
+        Class evaluator = ctEvaluator.toClass();
+        Method meth = evaluator.getDeclaredMethod("eval");
+        return meth.invoke(null);
     }
 }

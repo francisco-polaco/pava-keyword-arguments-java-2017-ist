@@ -1,16 +1,11 @@
 package ist.meic.pa;
 
 
-import java.util.Collection;
+import javassist.*;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import ist.meic.pa.exception.BadKeyWordsException;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtField;
-import javassist.NotFoundException;
 
 /**
  * Created by francisco on 20/03/2017.
@@ -25,7 +20,7 @@ public class TemplateMaker {
         this.targetClass = targetClass;
     }
 
-    public void makeTemplate(String args) throws NotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public void makeTemplate(String args) throws NotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException, CannotCompileException {
         System.out.println("KeywordArgs = " + args);
 
         // syntax checker
@@ -61,17 +56,19 @@ public class TemplateMaker {
         for (String key : keywordArgs.keySet()) {
             // Types considered:
             // byte, short, int, long, float, double, boolean, char
-            // upper case the first letter of the primitive data types - remeber ctclass primitive types are != java
-            String typeName = classFields.get(key).getType().getSimpleName().substring(0,1).toUpperCase() +
-                    classFields.get(key).getType().getSimpleName().substring(1);
+            ExpressionParser parser = new ExpressionParser();
 
-
-            TypeParser parser = (TypeParser) Class.forName(this.getClass().getPackage().getName() + "." +
-                    typeName + "Parser").newInstance();
-
-            parser.parse(keywordArgs.get(key));
+            try {
+                parser.parse(keywordArgs.get(key), classFields.get(key).getType().getSimpleName());
+            } catch (Throwable e) {
+               // e.printStackTrace();
+                throw new RuntimeException("Field \"" + classFields.get(key).getName() + "\" is not the same type as \"" + keywordArgs.get(key) + "\"");
+            }
         }
 
+
+
+        new ConstructorAdapter(keywordArgs, targetClass).adaptConstructor();
 
     }
 
@@ -106,7 +103,7 @@ public class TemplateMaker {
                 if (result.length == 2)
                     keysmap.put(result[0], result[1]);
                 else
-                    throw new BadKeyWordsException("Keyword " + keyword + " has wrong format");
+                    throw new RuntimeException("Keyword " + keyword + " has wrong format");
 
             }
         }
