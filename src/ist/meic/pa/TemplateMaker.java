@@ -113,9 +113,7 @@ public class TemplateMaker {
 
     private void validateKeywordArgs(String args) {
         /*
-        boolean simple = Pattern.matches("(([a-zA-Z]+)=[a-zA-Z0-9]+)?", args);
-        if(!simple) {
-            boolean complex = Pattern.matches("((([a-zA-Z]+)=[a-zA-Z0-9]+,?)*)", args);
+            boolean complex = Pattern.matches("((([_?a-zA-Z]+[0-9]+)=.*,?)*)", args);
             if (!complex)
                 throw new BadKeyWordsException("Keyword arguments have a wrong format!");
         }*/
@@ -124,18 +122,12 @@ public class TemplateMaker {
     private TreeMap<String, CtField> getClassFields() throws NotFoundException {
         TreeMap<String, CtField> output = new TreeMap<>();
         CtClass auxClass = targetClass;
-        do {
-            for(CtField f : auxClass.getDeclaredFields()){
-                if(!output.containsKey(f.getName())) {
-                    /*
-                     * If there is a field in a class and its super class
-                     * with the same name, we ignore the super class field.
-                    */
-                    output.put(f.getName(), f);
-                }
-            }
-            auxClass = auxClass.getSuperclass();
-        } while(auxClass != null && auxClass.getSuperclass()!= null && !auxClass.getSuperclass().equals(auxClass));
+        for(CtField f : auxClass.getFields()){
+            output.put(f.getName(), f);
+        }
+        for(CtField f : auxClass.getDeclaredFields()){
+            output.put(f.getName(), f);
+        }
         return output;
     }
 

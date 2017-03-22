@@ -5,7 +5,8 @@ public class Unknown {
 	private int high;
 	//private String batata;
 
-	//protected String ola;
+	protected String protpais;
+	public String pubpai;
 
 
 	@KeywordArgs("high=3+4")

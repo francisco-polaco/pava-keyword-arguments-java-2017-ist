@@ -2,9 +2,9 @@ package ist.meic.pa;
 
 import javassist.*;
 
+import java.io.IOException;
 import java.util.TreeMap;
 
-import static ist.meic.pa.KeyConstructors.classLoader;
 
 /**
  * Created by francisco on 22/03/2017.
@@ -20,35 +20,32 @@ public class ConstructorAdapter {
     }
 
     public void adaptConstructor() throws NotFoundException, CannotCompileException {
-        /*ClassPool pool = ClassPool.getDefault();
-        CtClass ctEvaluator = pool.makeClass("Evaluator" + UUID.randomUUID());
-        String template =
-                "public static " + type + " eval() { " +
-                        " return ("+ expression +");" +
-                        "}";
-        CtMethod ctMethod = CtNewMethod.make(template, ctEvaluator);
-        ctEvaluator.addMethod(ctMethod);
-        Class evaluator = ctEvaluator.toClass();
-        Method meth = evaluator.getDeclaredMethod("eval");
-        return meth.invoke(null);*/
 
         CtConstructor ctConstructor = targetClass.getConstructor("([Ljava/lang/Object;)V");
-        String template = "System.out.println(\"batata!\");";
-        ctConstructor.setBody(template);
-        //Obtain the run time class Foo
-        Class rtFoo = null;
-        try {
-            rtFoo = classLoader.loadClass("ist.meic.pa.Widget");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        String template = "{";
+        for (String field : fields.keySet()){
+            template += field + " = " + fields.get(field) + " ;";
         }
-        //Instantiate Foo
-        try {
-            Object foo = rtFoo.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        template += "String[] a = new String[3];" +
+                "        java.lang.Class auxClass = this.getClass();" +
+                "        for(java.lang.reflect.Field f : auxClass.getFields()){" +
+                "            output.put(f.getName(), f);" +
+                "        }" +
+                "        for(CtField f : auxClass.getDeclaredFields()){" +
+                "            output.put(f.getName(), f);" +
+                "        }" +
+                "for(int i=0; i<$args.length; i+=2){" +
 
-        //targetClass.addConstructor(ctConstructor);
+
+                "}";
+        template += "}";
+
+
+        ctConstructor.setBody(template);
+        try {
+            targetClass.writeFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

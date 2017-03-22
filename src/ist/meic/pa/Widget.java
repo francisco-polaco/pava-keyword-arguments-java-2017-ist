@@ -1,8 +1,6 @@
-package ist.meic.pa;
-
 import ist.meic.pa.KeywordArgs;
 
-class Widget {
+public class Widget {
 	int width;
 	int height;
 	int margin;
