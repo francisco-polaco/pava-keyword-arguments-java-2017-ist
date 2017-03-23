@@ -1,10 +1,13 @@
 package ist.meic.pa;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.NotFoundException;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.TreeMap;
 
 
 /**

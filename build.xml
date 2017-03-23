@@ -1,6 +1,7 @@
 <project name="keyConstructors" basedir="." default="jar">
 
     <property name="src.dir"     value="src"/>
+    <property name="test.dir"     value="Tests"/>
 
     <property name="build.dir"   value="build"/>
     <property name="lib.dir"   value="lib"/>
@@ -35,6 +36,17 @@
 
     <target name="run" depends="jar">
         <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <target name="test" depends="jar">
+        <javac includeantruntime="false" srcdir="${test.dir}" destdir="${classes.dir}">
+                <classpath>
+                    <pathelement path="${classes.dir}"/>
+                </classpath>
+        </javac>
+        <java jar="${jar.dir}/${ant.project.name}.jar" classpath="${classes.dir}" fork="true">
+                <arg value="${classes.dir}/TestA"/>
+        </java>
     </target>
 
 </project>

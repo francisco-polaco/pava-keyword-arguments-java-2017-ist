@@ -1,29 +1,22 @@
 package ist.meic.pa;
 
-import javassist.*;
+import javassist.ClassPool;
+import javassist.Loader;
+import javassist.Translator;
 
 public class KeyConstructors {
 
-    public static void main(String[] args) throws NotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException, CannotCompileException {
+    public static void main(String[] args) throws Throwable {
         if(args.length != 1){
             System.out.println("Invalid arguments!");
             System.out.println("Usage: java " + KeyConstructors.class.getCanonicalName() + " <classname>");
             return;
         }
+        System.out.println(args[0]);
+        Translator keyConstructorsTranslator = new KeyConstructorsTranslator();
         ClassPool classPool = ClassPool.getDefault();
-        //Create Javassist class loader
-        CtClass targetClass = classPool.get(args[0]);
-        CtConstructor[] constructors = targetClass.getConstructors();
-        for (CtConstructor constructor : constructors) {
-            if(constructor.hasAnnotation(KeywordArgs.class)){
-                TemplateMaker templateMaker = new TemplateMaker(constructor, targetClass);
-                templateMaker.makeTemplate(((KeywordArgs) constructor.getAnnotation(KeywordArgs.class)).value());
-            }
-        }
-
-
-
-
-
+        Loader classLoader = new Loader();
+        classLoader.addTranslator(classPool, keyConstructorsTranslator);
+        classLoader.run(args[0], null);
     }
 }
