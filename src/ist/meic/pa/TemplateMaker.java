@@ -2,13 +2,10 @@ package ist.meic.pa;
 
 
 import javassist.*;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 /**
  * Created by francisco on 20/03/2017.
