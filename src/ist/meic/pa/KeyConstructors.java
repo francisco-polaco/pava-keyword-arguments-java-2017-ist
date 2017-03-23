@@ -12,7 +12,6 @@ public class KeyConstructors {
             System.out.println("Usage: java " + KeyConstructors.class.getCanonicalName() + " <classname>");
             return;
         }
-        System.out.println(args[0]);
         Translator keyConstructorsTranslator = new KeyConstructorsTranslator();
         ClassPool classPool = ClassPool.getDefault();
         Loader classLoader = new Loader();
