@@ -2,10 +2,12 @@ package ist.meic.pa;
 
 
 import javassist.*;
+import org.omg.SendingContext.RunTime;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * Created by francisco on 20/03/2017.
@@ -111,13 +113,12 @@ public class TemplateMaker {
     }
 
 
-    private void validateKeywordArgs(String args) {
-        /*
-            boolean complex = Pattern.matches("((([_?a-zA-Z]+[0-9]+)=.*,?)*)", args);
+    private void validateKeywordArgs(String args) throws RuntimeException{
+            boolean complex = Pattern.matches("(((_?[a-zA-Z]+[0-9]*)=.*,?)*)", args);
             if (!complex)
-                throw new BadKeyWordsException("Keyword arguments have a wrong format!");
-        }*/
+                throw new RuntimeException("Keyword arguments have a wrong format!");
     }
+
 
     private TreeMap<String, CtField> getClassFields() throws NotFoundException {
         TreeMap<String, CtField> output = new TreeMap<>();

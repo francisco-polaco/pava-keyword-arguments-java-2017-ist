@@ -1,6 +1,6 @@
-import ist.meic.pa.KeywordArgs;
+package ist.meic.pa;
 
-class ExtendedWidget extends Widget {
+public class ExtendedWidget extends Widget {
 	String name;
 
 	@KeywordArgs("name=\"Extended\",width=200,margin=10")
