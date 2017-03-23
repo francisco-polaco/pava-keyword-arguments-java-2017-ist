@@ -21,7 +21,7 @@ public class KeyConstructorsTranslator implements Translator {
         CtClass auxClass = targetClass;
         ArrayList<String> keyWords = new ArrayList<>();
         while(auxClass.getSuperclass() != null){
-            for (CtConstructor constructor : constructors) {
+            for (CtConstructor constructor : auxClass.getConstructors()) {
                 if(constructor.hasAnnotation(KeywordArgs.class)){
                     try {
                         keyWords.add(((KeywordArgs) constructor.getAnnotation(KeywordArgs.class)).value());

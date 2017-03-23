@@ -59,9 +59,12 @@ public class TemplateMaker {
             ExpressionParser parser = new ExpressionParser();
 
             try {
+                System.err.println(((CtPrimitiveType) classFields.get(key).getType()).getSimpleName());
+                System.err.println(classFields.get(key).getType().getName());
                 parser.parse(keywordArgs.get(key), classFields.get(key).getType().getSimpleName());
             } catch (Throwable e) {
-               // e.printStackTrace();
+                System.err.println(e.getMessage());
+                e.printStackTrace();
                 throw new RuntimeException("Field \"" + classFields.get(key).getName() + "\" is not the same type as \"" + keywordArgs.get(key) + "\"");
             }
         }
@@ -97,40 +100,21 @@ public class TemplateMaker {
     private TreeMap<String, String> prepareKeywordArgs(ArrayList<String> argsArray) {
         TreeMap<String, String> keysmap = new TreeMap<>();
         if(argsArray.size() != 0) {
-            /*Object ab[] =  argsArray.toArray();
-            for(Object s : ab){
-                System.out.println("CATATAT " + s);
-            }
-            ArrayUtils.reverse(ab);
-            for(Object s : ab){
-                System.out.println("ABABABA " + s);
-            }
-            ArrayList<String> abc = reverse(argsArray);*/
-            for(Object argss : argsArray) {
-                String args = (String) argss;
-                System.out.println("FUCK: " + args);
+            for(String args : reverse(argsArray)) {
                 String[] keywords = args.split(",");
                 for (String keyword : keywords) {
                     String[] result = keyword.split("=");
                     if (result.length == 2)
                         keysmap.put(result[0], result[1]);
+                    else if(!keyword.contains("=")){
+                        continue;
+                    }
                     else
                         throw new RuntimeException("Keyword " + keyword + " has wrong format");
                 }
             }
         }
-        return keysmap;/*TreeMap<String, String> keysmap = new TreeMap<>();
-        if(!args.equals("")) {
-            String[] keywords = args.split(",");
-            for (String keyword : keywords) {
-                String[] result = keyword.split("=");
-                if (result.length == 2)
-                    keysmap.put(result[0], result[1]);
-                else
-                    throw new RuntimeException("Keyword " + keyword + " has wrong format");
-            }
-        }
-        return keysmap;*/
+        return keysmap;
     }
 
 
