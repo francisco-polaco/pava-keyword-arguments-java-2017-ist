@@ -56,8 +56,6 @@ public class TemplateMaker {
             ExpressionParser parser = new ExpressionParser();
 
             try {
-                System.err.println(((CtPrimitiveType) classFields.get(key).getType()).getSimpleName());
-                System.err.println(classFields.get(key).getType().getName());
                 parser.parse(keywordArgs.get(key), classFields.get(key).getType().getSimpleName());
             } catch (Throwable e) {
                 System.err.println(e.getMessage());
@@ -72,7 +70,7 @@ public class TemplateMaker {
 
     }
 
-    private void solveDependencies(TreeMap<String, String> keywordArgs) {
+    private void solveDependencies(TreeMap<String, String> keywordArgs) throws NotFoundException {
         boolean changed = true;
         while(changed){
             changed = false;
@@ -84,8 +82,9 @@ public class TemplateMaker {
                 // @KeywordArgs("result=40+5,value=Math.sin(result)")
                 else{
                     for(Map.Entry<String,String> aux : keywordArgs.entrySet()){
-                        if(aux.getValue().contains(entry.getKey())){
-                            aux.setValue(aux.getValue().replace(entry.getKey(), entry.getValue()));
+                        if(aux.getValue().contains(entry.getKey()) && !aux.getKey().equals(entry.getKey())){
+                            aux.setValue(aux.getValue().replace(entry.getKey(), "((" + getClassFields().get(entry.getKey()).getType().getSimpleName() + ")" +
+                                    entry.getValue() + ")"));
                             changed = true;
                         }
                     }

@@ -18,8 +18,9 @@ public class ExpressionParser  {
         CtClass ctEvaluator = pool.makeClass("Evaluator" + UUID.randomUUID());
         String template =
                 "public static " + type + " eval() { " +
-                        " return ("+ expression +");" +
-                        "}";
+                        type + " aux = (" + expression + ");" +
+                        " return aux;" +
+                "}";
         CtMethod ctMethod = CtNewMethod.make(template, ctEvaluator);
         ctEvaluator.addMethod(ctMethod);
         Class evaluator = ctEvaluator.toClass();
