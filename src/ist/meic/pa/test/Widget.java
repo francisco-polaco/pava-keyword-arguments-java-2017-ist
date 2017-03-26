@@ -6,7 +6,6 @@ class Widget {
 	int width;
 	int height;
 	int margin;
-	private long pixel;
 
 	@KeywordArgs("width=100,height=50,margin=5")
 	public Widget(Object... args) {}

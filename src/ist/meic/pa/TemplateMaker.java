@@ -25,9 +25,17 @@ public class TemplateMaker {
         TreeMap<String, String> keywordArgs = prepareKeywordArgs(args);
         TreeMap<String, CtField> classFields = getClassFields(keywordArgs);
 
+
+        ArrayList<String> as = new ArrayList<String>();
+        as.addAll(keywordArgs.keySet());
+        as.addAll(emptyKeywords);
+
+        if(classFields.size() == 0 && as.size() != 0)
+            throw new RuntimeException("There is no fields in class " + targetClass.getSimpleName() + ", but there are keyword arguments for it.");
+
         // checks if every keyword argument exists in the class
-        for (String keyword : keywordArgs.keySet()){
-            if(!classFields.keySet().contains(keyword) && !emptyKeywords.contains(keyword)){
+        for (String keyword : as){
+            if(!as.contains(keyword) && !as.contains(keyword)){
                 throw new RuntimeException("Unrecognized keyword @" + targetClass.getSimpleName() + ": " + keyword);
             }
         }
@@ -50,8 +58,6 @@ public class TemplateMaker {
         TreeMap<String, String> keywordArgs = new TreeMap<>();
         if(argsArray.size() != 0) {
             for(String args : reverse(argsArray)) {
-                if(args.equals(""))
-                    break;
 
                 String[] keywords = args.split(",");
                 for (String keyword : keywords) {

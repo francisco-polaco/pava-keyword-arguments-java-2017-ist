@@ -42,7 +42,7 @@ public class KeyConstructorsTranslator implements Translator {
                     throw new RuntimeException(e);
                 }
             }
-            // case where there is no constructor in a non annoted class - set body behaviour
+            // case where there is no constructor in a non annotated class - set body behaviour
             else if (!constructor.getSignature().equals("()V"))
                 targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
         }
