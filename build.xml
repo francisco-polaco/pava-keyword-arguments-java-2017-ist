@@ -1,15 +1,14 @@
 <project name="keyConstructors" basedir="." default="jar">
 
-    <property name="src.dir"     value="src"/>
-    <property name="test.dir"     value="Tests"/>
+    <property name="src.dir" value="src"/>
+    <property name="test.dir" value="Tests"/>
 
-    <property name="build.dir"   value="build"/>
-    <property name="lib.dir"   value="lib"/>
+    <property name="build.dir" value="build"/>
+    <property name="lib.dir" value="lib"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="jar.dir"     value="."/>
+    <property name="jar.dir" value="."/>
 
-    <property name="main-class"  value="ist.meic.pa.KeyConstructors"/>
-
+    <property name="main-class" value="ist.meic.pa.KeyConstructors"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -31,22 +30,13 @@
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/>
         </jar>
     </target>
 
     <target name="run" depends="jar">
-        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
-    </target>
-
-    <target name="test" depends="jar">
-        <javac includeantruntime="false" srcdir="${test.dir}" destdir="${classes.dir}">
-                <classpath>
-                    <pathelement path="${classes.dir}"/>
-                </classpath>
-        </javac>
-        <java jar="${jar.dir}/${ant.project.name}.jar" classpath="${classes.dir}" fork="true">
-                <arg value="${classes.dir}/TestA"/>
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+            <arg line="ist.meic.pa.test.TestA"/>
         </java>
     </target>
-
 </project>
