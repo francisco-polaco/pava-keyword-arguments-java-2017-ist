@@ -8,11 +8,11 @@ import ist.meic.pa.KeywordArgs;
 public class LOLIMHO extends Unknown {
 
     //private String weight;
-    protected int ola;
-    private double high;
-    public double xD;
+    protected int a;
+    private int b;
+    public int c;
 
-    @KeywordArgs("high=4.0,xD=Math.sin(high)")
+    @KeywordArgs("a=b,b=c,c=a")
     public LOLIMHO(Object... args) {
     }
 }

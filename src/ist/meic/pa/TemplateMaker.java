@@ -106,14 +106,22 @@ public class TemplateMaker {
 
     private void solveDependencies(TreeMap<String, String> keywordArgs) throws NotFoundException {
         boolean changed = true;
+        TreeMap<String, String> aux = new TreeMap<>();
+        int counter = 0;
         while(changed){
             changed = false;
             for(Map.Entry<String,String> entry : keywordArgs.entrySet()) {
+                System.out.println(entry.getKey() + " VS " + entry.getValue());
                 if (keywordArgs.containsKey(entry.getValue())) {
                     entry.setValue(keywordArgs.get(entry.getValue()));
                     changed = true;
                 }
             }
+            if(aux.equals(keywordArgs) && counter == keywordArgs.size()){ // Infinite loop detected, it didn't change between iterations
+                throw new RuntimeException("Impossible to solve variables dependencies. They are circular.");
+            }
+            aux = new TreeMap<>(keywordArgs);
+            counter++;
         }
     }
 
