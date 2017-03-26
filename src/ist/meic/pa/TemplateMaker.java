@@ -111,7 +111,6 @@ public class TemplateMaker {
         while(changed){
             changed = false;
             for(Map.Entry<String,String> entry : keywordArgs.entrySet()) {
-                System.out.println(entry.getKey() + " VS " + entry.getValue());
                 if (keywordArgs.containsKey(entry.getValue())) {
                     entry.setValue(keywordArgs.get(entry.getValue()));
                     changed = true;
