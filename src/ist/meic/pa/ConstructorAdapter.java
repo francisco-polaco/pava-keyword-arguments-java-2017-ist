@@ -19,7 +19,7 @@ public class ConstructorAdapter {
 
     public void adaptConstructor() throws NotFoundException, CannotCompileException {
         // add default constructor - needed for setBody
-        //targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
+        targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
 
         String template = "{";
         for (String field : fields.keySet()){
@@ -58,6 +58,6 @@ public class ConstructorAdapter {
                     "}" +
                 "}";
         template += "}";
-        ctConstructor.insertAfter(template);
+        ctConstructor.setBody(template);
     }
 }

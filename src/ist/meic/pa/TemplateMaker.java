@@ -12,6 +12,7 @@ public class TemplateMaker {
 
     private CtConstructor ctConstructor;
     private CtClass targetClass;
+    private ArrayList<String> emptyKeywords = new ArrayList<>();
 
     public TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
         this.ctConstructor = ctConstructor;
@@ -26,7 +27,7 @@ public class TemplateMaker {
 
         // checks if every keyword argument exists in the class
         for (String keyword : keywordArgs.keySet()){
-            if(!classFields.keySet().contains(keyword)){
+            if(!classFields.keySet().contains(keyword) && !emptyKeywords.contains(keyword)){
                 throw new RuntimeException("Unrecognized keyword @" + targetClass.getSimpleName() + ": " + keyword);
             }
         }
@@ -56,7 +57,7 @@ public class TemplateMaker {
                 for (String keyword : keywords) {
                     // needed to invalidate invalid keywordArgs which appear without a equal
                     if(!keyword.contains("=")) {
-                        keywordArgs.put(keyword, "");
+                        emptyKeywords.add(keyword);
                         continue;
                     }
                     String[] result = keyword.split("=");
