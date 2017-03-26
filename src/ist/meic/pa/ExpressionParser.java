@@ -6,9 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-/**
- * Created by francisco on 21/03/2017.
- */
 public class ExpressionParser  {
 
     public Object parse(String expression, String type)

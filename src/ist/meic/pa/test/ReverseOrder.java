@@ -2,14 +2,13 @@ package ist.meic.pa.test;
 
 import ist.meic.pa.KeywordArgs;
 
-class Widget {
+public class ReverseOrder {
 	int width;
 	int height;
 	int margin;
-	private long pixel;
 
-	@KeywordArgs("width=100,height=50,margin=5")
-	public Widget(Object... args) {}
+	@KeywordArgs("height=margin,width=height,margin=5")
+	public ReverseOrder(Object... args) {}
 
 	public String toString() {
 		return String.format("width:%s,height:%s,margin:%s",
