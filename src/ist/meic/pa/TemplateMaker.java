@@ -39,7 +39,7 @@ public class TemplateMaker {
     // Catarina god das regex's verifica sff!
     private void validateKeywordArgs(ArrayList<String> args) throws RuntimeException{
         for (String keywordArg : args){
-            String pattern = "(([a-zA-z]+[0-9]*=.*,?)*)|(([a-zA-z]+[0-9]*,?)*)|\\s*";
+            String pattern = "((_?[a-zA-z]+[0-9]*=.*,?)*)|((_?[a-zA-z]+[0-9]*,?)*)|\\s*";
             if(!Pattern.matches(pattern, keywordArg))
                 throw new RuntimeException("KeywordArg @" + targetClass.getSimpleName()  + ": " + keywordArg + " has wrong format!");
         }
