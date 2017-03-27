@@ -13,6 +13,7 @@ public class TemplateMaker {
     private CtConstructor ctConstructor;
     private CtClass targetClass;
     private ArrayList<String> emptyKeywords = new ArrayList<>();
+    private ArrayList<String> keywordsInOrder = new ArrayList<>();
 
     public TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
         this.ctConstructor = ctConstructor;
@@ -26,7 +27,7 @@ public class TemplateMaker {
         TreeMap<String, CtField> classFields = getClassFields(keywordArgs);
 
 
-        ArrayList<String> allKeywordArgs = new ArrayList<String>();
+        ArrayList<String> allKeywordArgs = new ArrayList<>();
         allKeywordArgs.addAll(keywordArgs.keySet());
         allKeywordArgs.addAll(emptyKeywords);
 
@@ -67,9 +68,10 @@ public class TemplateMaker {
                         continue;
                     }
                     String[] result = keyword.split("=");
-                    if (result.length == 2)
+                    if (result.length == 2) {
                         keywordArgs.put(result[0], result[1]);
-                    else
+                        keywordsInOrder.add(result[0]);
+                    }else
                         throw new RuntimeException("KeywordArg @" + targetClass.getSimpleName() +": " + keyword + " has wrong format!");
                 }
             }
@@ -105,6 +107,26 @@ public class TemplateMaker {
     }
 
     private void solveDependencies(TreeMap<String, String> keywordArgs) throws NotFoundException {
+
+        ArrayList<String> entriesChecked = new ArrayList<>();
+        for(String entry : keywordsInOrder){
+            //if(isNotLiteral(keywordArgs.get(entry))){
+            if(entriesChecked.contains(keywordArgs.get(entry))){
+                // Checking from left to right
+                keywordArgs.put(entry, keywordArgs.get(keywordArgs.get(entry)));
+            }
+           // }
+            entriesChecked.add(entry);
+        }
+
+        for(String key : keywordArgs.keySet()){
+            if(keywordArgs.keySet().contains(keywordArgs.get(key))){
+                throw new RuntimeException("Impossible to solve variables dependencies.");
+            }
+        }
+
+
+/*
         boolean changed = true;
         TreeMap<String, String> aux = new TreeMap<>();
         int counter = 0;
@@ -122,7 +144,7 @@ public class TemplateMaker {
             }
             aux = new TreeMap<>(keywordArgs);
             counter++;
-        }
+        }*/
     }
 
     private <T> ArrayList<T> reverse(ArrayList<T> list) {
