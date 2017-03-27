@@ -36,7 +36,7 @@
 
     <target name="run" depends="jar">
         <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
-            <arg line="ist.meic.pa.test.TestA"/>
+            <arg line="ist.meic.pa.test.lixo.TestA"/>
         </java>
     </target>
 </project>
