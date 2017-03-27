@@ -10,7 +10,7 @@ public class Love {
 	public Love(Object... args) {}
 
 	public String toString() {
-		return super.toString() + String.format("heartBpm:%s, personName:%s",
+		return String.format("Love: heartBpm:%s, personName:%s",
 				heartBpm, personName);
 	}
 }

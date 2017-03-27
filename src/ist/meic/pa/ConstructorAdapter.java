@@ -3,6 +3,7 @@ package ist.meic.pa;
 import javassist.*;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.TreeMap;
 
 public class ConstructorAdapter {
@@ -27,6 +28,19 @@ public class ConstructorAdapter {
             if(!fields.get(field).equalsIgnoreCase(""))
                 template += field + " = " + fields.get(field) + " ;";
         }
+
+
+        /*java.lang.String value = "";
+        for (java.lang.reflect.Constructor constructor : getClass().getConstructors()) {
+            if(constructor.isAnnotationPresent(ist.meic.pa.KeywordArgs.class)){
+                value = ((ist.meic.pa.KeywordArgs) constructor.getAnnotation(ist.meic.pa.KeywordArgs.class)).value();
+            }
+        }
+        java.lang.String[] keywords = value.split(",");
+        java.util.ArrayList listCustomFields = new java.util.ArrayList();
+        for(int i = 0 ; i < keywords.length ; i++){
+            listCustomFields.add(keywords[i].split("=")[0]);
+        }*/
 
         // since the arguments replace the defaults, just insert after
         template += "java.util.TreeMap fields = new java.util.TreeMap();" +

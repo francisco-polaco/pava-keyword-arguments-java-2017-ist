@@ -7,7 +7,8 @@ tests = {"TestA" : "outA.txt",
          "TestE" : "outE.txt",
          "TestF" : "outF.txt",
          "TestG" : "outG.txt",
-         "TestH" : "outH.txt"}
+         "TestH" : "outH.txt",
+         "TestFooBar" : "outFooBar.txt"}
 
 for key, value in tests.items() :
     cmd = ['java', '-jar', 'keyConstructors.jar', 'ist.meic.pa.test.' + key]

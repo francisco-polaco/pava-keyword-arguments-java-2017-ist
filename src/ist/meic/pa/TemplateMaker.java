@@ -26,12 +26,11 @@ public class TemplateMaker {
         TreeMap<String, String> keywordArgs = prepareKeywordArgs(args);
         TreeMap<String, CtField> classFields = getClassFields(keywordArgs);
 
-
         ArrayList<String> allKeywordArgs = new ArrayList<>();
         allKeywordArgs.addAll(keywordArgs.keySet());
         allKeywordArgs.addAll(emptyKeywords);
 
-        if(classFields.size() == 0 && allKeywordArgs.size() != 0)
+        if(classFields.size() == 0 && (allKeywordArgs.size() != 0))
             throw new RuntimeException("There is no fields in class " + targetClass.getSimpleName() + ", but there are keyword arguments for it.");
 
         // checks if every keyword argument exists in the class
@@ -63,7 +62,8 @@ public class TemplateMaker {
                 String[] keywords = args.split(",");
                 for (String keyword : keywords) {
                     // needed to invalidate invalid keywordArgs which appear without a equal
-                    if(!keyword.contains("=")) {
+                    if(keyword.equals("")) continue;
+                    if(!keyword.contains("=") ) {
                         emptyKeywords.add(keyword);
                         continue;
                     }
@@ -110,12 +110,10 @@ public class TemplateMaker {
 
         ArrayList<String> entriesChecked = new ArrayList<>();
         for(String entry : keywordsInOrder){
-            //if(isNotLiteral(keywordArgs.get(entry))){
             if(entriesChecked.contains(keywordArgs.get(entry))){
                 // Checking from left to right
                 keywordArgs.put(entry, keywordArgs.get(keywordArgs.get(entry)));
             }
-           // }
             entriesChecked.add(entry);
         }
 
