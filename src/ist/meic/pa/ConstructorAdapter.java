@@ -4,19 +4,19 @@ import javassist.*;
 
 import java.util.TreeMap;
 
-public class ConstructorAdapter {
+class ConstructorAdapter {
 
     private TreeMap<String, String> fields;
     private CtClass targetClass;
     private CtConstructor ctConstructor;
 
-    public ConstructorAdapter(TreeMap<String, String> fields, CtClass targetClass, CtConstructor ctConstructor) {
+    ConstructorAdapter(TreeMap<String, String> fields, CtClass targetClass, CtConstructor ctConstructor) {
         this.fields = fields;
         this.targetClass = targetClass;
         this.ctConstructor = ctConstructor;
     }
 
-    public void adaptConstructor() throws NotFoundException, CannotCompileException {
+    void adaptConstructor() throws NotFoundException, CannotCompileException {
         // add default constructor - needed for setBody
         targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
 
@@ -26,19 +26,6 @@ public class ConstructorAdapter {
             if(!fields.get(field).equalsIgnoreCase(""))
                 template += field + " = " + fields.get(field) + " ;";
         }
-
-
-        /*java.lang.String value = "";
-        for (java.lang.reflect.Constructor constructor : getClass().getConstructors()) {
-            if(constructor.isAnnotationPresent(ist.meic.pa.KeywordArgs.class)){
-                value = ((ist.meic.pa.KeywordArgs) constructor.getAnnotation(ist.meic.pa.KeywordArgs.class)).value();
-            }
-        }
-        java.lang.String[] keywords = value.split(",");
-        java.util.ArrayList listCustomFields = new java.util.ArrayList();
-        for(int i = 0 ; i < keywords.length ; i++){
-            listCustomFields.add(keywords[i].split("=")[0]);
-        }*/
 
         // since the arguments replace the defaults, just insert after
         template += "java.util.TreeMap fields = new java.util.TreeMap();" +
