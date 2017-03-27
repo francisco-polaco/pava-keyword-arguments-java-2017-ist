@@ -1,27 +1,24 @@
 package ist.meic.pa;
 
-
 import javassist.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-public class TemplateMaker {
+class TemplateMaker {
 
     private CtConstructor ctConstructor;
     private CtClass targetClass;
     private ArrayList<String> emptyKeywords = new ArrayList<>();
     private ArrayList<String> keywordsInOrder = new ArrayList<>();
 
-    public TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
+    TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
         this.ctConstructor = ctConstructor;
         this.targetClass = targetClass;
     }
 
-    public void makeTemplate(ArrayList<String> args) throws NotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException, CannotCompileException {
-        // syntax checker
+    void makeTemplate(ArrayList<String> args) throws NotFoundException, ClassNotFoundException, IllegalAccessException, InstantiationException, CannotCompileException {
         validateKeywordArgs(args);
         TreeMap<String, String> keywordArgs = prepareKeywordArgs(args);
         TreeMap<String, CtField> classFields = getClassFields(keywordArgs);
@@ -45,7 +42,6 @@ public class TemplateMaker {
         new ConstructorAdapter(keywordArgs, targetClass, ctConstructor).adaptConstructor();
     }
 
-    // Catarina god das regex's verifica sff!
     private void validateKeywordArgs(ArrayList<String> args) throws RuntimeException{
         for (String keywordArg : args){
             String pattern = "((_?[a-zA-z]+[0-9]*=.*,?)*)|((_?[a-zA-z]+[0-9]*,?)*)|\\s*";
@@ -122,27 +118,6 @@ public class TemplateMaker {
                 throw new RuntimeException("Impossible to solve variables dependencies.");
             }
         }
-
-
-/*
-        boolean changed = true;
-        TreeMap<String, String> aux = new TreeMap<>();
-        int counter = 0;
-        while(changed){
-            changed = false;
-            for(Map.Entry<String,String> entry : keywordArgs.entrySet()) {
-                if (keywordArgs.containsKey(entry.getValue())) {
-                    entry.setValue(keywordArgs.get(entry.getValue()));
-                    changed = true;
-                }
-            }
-            if(aux.equals(keywordArgs) && counter == keywordArgs.size()){
-                // Infinite loop detected, it didn't change between iterations
-                throw new RuntimeException("Impossible to solve variables dependencies. They are circular.");
-            }
-            aux = new TreeMap<>(keywordArgs);
-            counter++;
-        }*/
     }
 
     private <T> ArrayList<T> reverse(ArrayList<T> list) {
@@ -155,55 +130,4 @@ public class TemplateMaker {
 
         return result;
     }
-
-
-    /*
-    Deleted code:
-        Reason: There is no need to evaluate the expressions to see if the types matches, because it's not relevant!
-        ----------------------------------------------------------------------------
-        // makes complex attributions
-        for (String key : keywordArgs.keySet()) {
-            // Types considered:
-            // byte, short, int, long, float, double, boolean, char
-            ExpressionParser parser = new ExpressionParser();
-            try {
-                parser.parse(keywordArgs.get(key), classFields.get(key).getType().getSimpleName());
-            } catch (Throwable e) {
-                System.err.println(e.getMessage());
-                e.printStackTrace();
-                throw new RuntimeException("Field \"" + classFields.get(key).getName() + "\" is not the same type as \"" + keywordArgs.get(key) + "\"");
-            }
-        }
-        -----------------------------------------------------------------------------
-        Reason: Javassist solves the name resolution
-        -----------------------------------------------------------------------------
-         // @KeywordArgs("result=40+5,value=Math.sin(result)")
-                else{
-                    for(Map.Entry<String,String> aux : keywordArgs.entrySet()){
-                        if(aux.getValue().contains(entry.getKey()) && !aux.getKey().equals(entry.getKey())){
-                            aux.setValue(aux.getValue().replace(entry.getKey(), "((" + getClassFields().get(entry.getKey()).getType().getSimpleName() + ")" +
-                                    entry.getValue() + ")"));
-                            changed = true;
-                        }
-                    }
-                }
-        ------------------------------------------------------------------------------
-        Reason: prints
-        ------------------------------------------------------------------------------
-        for (String key : classFields.keySet()) {
-            System.out.println("Name: " + key + " Value: " + classFields.get(key));
-        }
-
-        System.out.println("KEYWORDARGS:");
-        for (String key : keywordArgs.keySet()) {
-            System.out.println("Arg: " + key + " Value: " + keywordArgs.get(key));
-        }
-
-        System.out.println("DEPENDENCIES SOLVED:");
-        for (String key : keywordArgs.keySet()){
-            System.out.println("Arg: " + key + " Value: " + keywordArgs.get(key));
-        }
-        ------------------------------------------------------------------------------
-     */
-
 }
