@@ -26,16 +26,16 @@ public class TemplateMaker {
         TreeMap<String, CtField> classFields = getClassFields(keywordArgs);
 
 
-        ArrayList<String> as = new ArrayList<String>();
-        as.addAll(keywordArgs.keySet());
-        as.addAll(emptyKeywords);
+        ArrayList<String> allKeywordArgs = new ArrayList<String>();
+        allKeywordArgs.addAll(keywordArgs.keySet());
+        allKeywordArgs.addAll(emptyKeywords);
 
-        if(classFields.size() == 0 && as.size() != 0)
+        if(classFields.size() == 0 && allKeywordArgs.size() != 0)
             throw new RuntimeException("There is no fields in class " + targetClass.getSimpleName() + ", but there are keyword arguments for it.");
 
         // checks if every keyword argument exists in the class
-        for (String keyword : as){
-            if(!as.contains(keyword) && !as.contains(keyword)){
+        for (String keyword : allKeywordArgs){
+            if(!allKeywordArgs.contains(keyword)){
                 throw new RuntimeException("Unrecognized keyword @" + targetClass.getSimpleName() + ": " + keyword);
             }
         }
@@ -116,7 +116,8 @@ public class TemplateMaker {
                     changed = true;
                 }
             }
-            if(aux.equals(keywordArgs) && counter == keywordArgs.size()){ // Infinite loop detected, it didn't change between iterations
+            if(aux.equals(keywordArgs) && counter == keywordArgs.size()){
+                // Infinite loop detected, it didn't change between iterations
                 throw new RuntimeException("Impossible to solve variables dependencies. They are circular.");
             }
             aux = new TreeMap<>(keywordArgs);
