@@ -65,6 +65,7 @@ class TemplateMaker {
                     }
                     String[] result = keyword.split("=");
                     if (result.length == 2) {
+                        // #extension
                         keywordArgs.put(result[0], result[1]);
                         keywordsInOrder.add(result[0]);
                     }else
