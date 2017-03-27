@@ -1,4 +1,4 @@
-package ist.meic.pa.test;
+package ist.meic.pa.test.lixo;
 
 public class TestLove {
 	public static void main(String[] args) {

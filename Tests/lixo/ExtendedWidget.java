@@ -1,4 +1,4 @@
-package ist.meic.pa.test;
+package ist.meic.pa.test.lixo;
 
 import ist.meic.pa.KeywordArgs;
 
