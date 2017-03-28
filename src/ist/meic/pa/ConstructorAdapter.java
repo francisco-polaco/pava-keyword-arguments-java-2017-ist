@@ -16,18 +16,19 @@ class ConstructorAdapter {
         this.ctConstructor = ctConstructor;
     }
 
-    void adaptConstructor() throws NotFoundException, CannotCompileException {
+    void adaptConstructor() throws CannotCompileException {
         // add default constructor - needed for setBody
         targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
 
         String template = "{";
-        for (String field : fields.keySet()){
+
+        for (String field : fields.keySet()) {
             // let the field assume the default value
-            if(!fields.get(field).equalsIgnoreCase(""))
+            if (!fields.get(field).equalsIgnoreCase(""))
                 template += field + " = " + fields.get(field) + " ;";
         }
 
-        // since the arguments replace the defaults, just insert after
+        // Since the arguments replace the defaults, we need to insert them after
         template += "java.util.TreeMap fields = new java.util.TreeMap();" +
                 "Class targetClass = this.getClass();" +
                 "for(int i = 0; i < targetClass.getDeclaredFields().length; i++)" +
@@ -37,10 +38,10 @@ class ConstructorAdapter {
                 "while(currentClass.getSuperclass() != null){" +
                     "for(int i = 0 ; i < currentClass.getDeclaredFields().length ; i++){" +
                         "if(currentClass.getDeclaredFields()[i].getModifiers() != java.lang.reflect.Modifier.PRIVATE){" +
-                            "fields.put(currentClass.getDeclaredFields()[i].getName(), currentClass.getDeclaredFields()[i]);" +
+                        "fields.put(currentClass.getDeclaredFields()[i].getName(), currentClass.getDeclaredFields()[i]);" +
                         "}" +
                     "}" +
-                   "currentClass = currentClass.getSuperclass();"+
+                    "currentClass = currentClass.getSuperclass();" +
                 "}" +
 
                 "java.util.Collection keySet = fields.keySet();" +
@@ -53,7 +54,8 @@ class ConstructorAdapter {
                         "toInsert.set(this,$1[i+1]);" +
                     "}" +
                     "catch (Throwable t) {" +
-                         "throw new RuntimeException(\"Argument \" + $1[i+1] + \" is not of the type toInsert.getName()\");" +
+                        "throw new RuntimeException(\"Argument \" + $1[i+1] + \" " +
+                            "is not of the type toInsert.getName()\");" +
                     "}" +
                 "}";
         template += "}";

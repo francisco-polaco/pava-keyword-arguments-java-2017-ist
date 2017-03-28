@@ -7,7 +7,7 @@ import javassist.Translator;
 public class KeyConstructors {
 
     public static void main(String[] args) throws Throwable {
-        if(args.length != 1){
+        if (args.length != 1) {
             System.out.println("Invalid arguments!");
             System.out.println("Usage: java " + KeyConstructors.class.getCanonicalName() + " <classname>");
             return;
@@ -19,15 +19,15 @@ public class KeyConstructors {
         // To show a trace as presented on the project description
         try {
             classLoader.run(args[0], null);
-        }catch (Throwable e){
+        } catch (Throwable e) {
             RuntimeException ex = null;
-            while(e.getCause()!= null){
-                if(e.getCause() instanceof RuntimeException){
+            while (e.getCause() != null) {
+                if (e.getCause() instanceof RuntimeException) {
                     ex = (RuntimeException) e.getCause();
                 }
                 e = e.getCause();
             }
-            if(ex == null) throw e;
+            if (ex == null) throw e;
             else throw ex;
         }
     }
