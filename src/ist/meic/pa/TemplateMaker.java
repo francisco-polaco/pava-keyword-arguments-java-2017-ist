@@ -7,21 +7,21 @@ import java.util.LinkedHashSet;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-class TemplateMaker {
+public class TemplateMaker {
 
     private CtConstructor ctConstructor;
     private CtClass targetClass;
     private ArrayList<String> emptyKeywords;
     private ArrayList<String> keywordsInOrder;
 
-    TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
+    public TemplateMaker(CtConstructor ctConstructor, CtClass targetClass) {
         this.ctConstructor = ctConstructor;
         this.targetClass = targetClass;
         emptyKeywords = new ArrayList<>();
         keywordsInOrder = new ArrayList<>();
     }
 
-    void makeTemplate(ArrayList<String> args) throws NotFoundException, CannotCompileException {
+    public void makeTemplate(ArrayList<String> args) throws NotFoundException, CannotCompileException {
         validateKeywordArgs(args);
         TreeMap<String, String> keywordArgs = prepareKeywordArgs(args);
         TreeMap<String, CtField> classFields = getClassFields(keywordArgs);
