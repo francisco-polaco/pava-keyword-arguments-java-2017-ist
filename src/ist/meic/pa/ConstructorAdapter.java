@@ -5,16 +5,19 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtNewConstructor;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 class ConstructorAdapter {
 
     private TreeMap<String, String> fields;
+    private ArrayList<String> keysInOrder;
     private CtClass targetClass;
     private CtConstructor ctConstructor;
 
-    ConstructorAdapter(TreeMap<String, String> fields, CtClass targetClass, CtConstructor ctConstructor) {
+    ConstructorAdapter(TreeMap<String, String> fields, ArrayList<String> keysInOrder, CtClass targetClass, CtConstructor ctConstructor) {
         this.fields = fields;
+        this.keysInOrder = keysInOrder;
         this.targetClass = targetClass;
         this.ctConstructor = ctConstructor;
     }
@@ -25,7 +28,7 @@ class ConstructorAdapter {
 
         String template = "{";
 
-        for (String field : fields.keySet()) {
+        for (String field : keysInOrder) {
             template += field + " = " + fields.get(field) + " ;";
         }
 

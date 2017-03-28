@@ -3,6 +3,7 @@ package ist.meic.pa;
 import javassist.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -42,7 +43,8 @@ class TemplateMaker {
         }
 
         solveDependencies(keywordArgs);
-        new ConstructorAdapter(keywordArgs, targetClass, ctConstructor).adaptConstructor();
+        new ConstructorAdapter(keywordArgs, new ArrayList<>(new LinkedHashSet<String>(keywordsInOrder)),
+                targetClass, ctConstructor).adaptConstructor();
     }
 
     private void validateKeywordArgs(ArrayList<String> args) throws RuntimeException {
