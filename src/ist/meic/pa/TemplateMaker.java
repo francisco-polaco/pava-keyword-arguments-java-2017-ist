@@ -60,23 +60,27 @@ class TemplateMaker {
             for (String args : reverse(argsArray)) {
                 String[] keywords = args.split(",");
                 for (String keyword : keywords) {
-                    if (keyword.equals("")) continue;
-                    if (!keyword.contains("=")) {
-                        emptyKeywords.add(keyword);
-                        continue;
-                    }
-                    String[] nameAndValue = keyword.split("=");
-                    if (nameAndValue.length == 2) {
-                        // #extension
-                        keywordArgs.put(nameAndValue[0], nameAndValue[1]);
-                        keywordsInOrder.add(nameAndValue[0]);
-                    } else
-                        throw new RuntimeException("KeywordArg @" +
-                                targetClass.getSimpleName() + ": " + keyword + " has wrong format!");
+                    parseKeyword(keywordArgs, keyword);
                 }
             }
         }
         return keywordArgs;
+    }
+
+    private void parseKeyword(TreeMap<String, String> keywordArgs, String keyword) {
+        if (keyword.equals("")) return;
+        if (!keyword.contains("=")) {
+            emptyKeywords.add(keyword);
+            return;
+        }
+        String[] nameAndValue = keyword.split("=");
+        if (nameAndValue.length == 2) {
+            // #extension
+            keywordArgs.put(nameAndValue[0], nameAndValue[1]);
+            keywordsInOrder.add(nameAndValue[0]);
+        } else
+            throw new RuntimeException("KeywordArg @" +
+                    targetClass.getSimpleName() + ": " + keyword + " has wrong format!");
     }
 
     private TreeMap<String, CtField> getClassFields(TreeMap<String, String> args) throws NotFoundException {

@@ -1,6 +1,9 @@
 package ist.meic.pa;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtNewConstructor;
 
 import java.util.TreeMap;
 
@@ -23,9 +26,7 @@ class ConstructorAdapter {
         String template = "{";
 
         for (String field : fields.keySet()) {
-            // let the field assume the default value
-            if (!fields.get(field).equalsIgnoreCase(""))
-                template += field + " = " + fields.get(field) + " ;";
+            template += field + " = " + fields.get(field) + " ;";
         }
 
         // Since the arguments replace the defaults, we need to insert them after
