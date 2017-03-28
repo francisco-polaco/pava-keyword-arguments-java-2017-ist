@@ -59,12 +59,35 @@ class TemplateMaker {
         if (argsArray.size() != 0) {
             for (String args : reverse(argsArray)) {
                 String[] keywords = args.split(",");
-                for (String keyword : keywords) {
+                for (String keyword : checkMethodCall(keywords)) {
                     parseKeyword(keywordArgs, keyword);
                 }
             }
         }
         return keywordArgs;
+    }
+
+    private ArrayList<String> checkMethodCall(String[] keywords) {
+        ArrayList<String> res = new ArrayList<>();
+        String build = "";
+        int open = 0;
+        for (String keyword : keywords) {
+            if (keyword.contains("(") && keyword.contains(")")) {
+                res.add(keyword);
+            } else if (keyword.contains("(")) {
+                open++;
+                build += keyword;
+            } else if (keyword.contains(")")) {
+                if (open <= 0) throw new RuntimeException("Parenthesis don't match.");
+                open--;
+                build += keyword;
+            }
+            if (open == 0) {
+                res.add(build.equals("") ? keyword : build);
+                build = "";
+            } else build += ",";
+        }
+        return res;
     }
 
     private void parseKeyword(TreeMap<String, String> keywordArgs, String keyword) {
