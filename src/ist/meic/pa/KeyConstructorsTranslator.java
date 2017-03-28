@@ -1,8 +1,17 @@
 package ist.meic.pa;
 
 import javassist.*;
+import javassist.bytecode.*;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.ArrayMemberValue;
+import javassist.bytecode.annotation.EnumMemberValue;
+import javassist.bytecode.annotation.MemberValue;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by francisco on 23/03/2017.
@@ -46,6 +55,75 @@ public class KeyConstructorsTranslator implements Translator {
             else if (!constructor.getSignature().equals("()V"))
                 targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
         }
+
+        CtClass ctClass = classPool.get("ist.meic.pa.KeywordArgs");
+        ClassFile classFile = ctClass.getClassFile();
+
+        if(classFile.getAttribute("RuntimeVisibleAnnotations") != null){
+            ConstPool constPool = classFile.getConstPool();
+
+            // remove the old annotations
+            classFile.removeAttribute("RuntimeVisibleAnnotations");
+
+            AnnotationsAttribute attributeSet =
+                    new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+
+            attributeSet.addAnnotation(builEnumdAnnotation(
+                    constPool,
+                    "java.lang.annotation.Retention",
+                    "java.lang.annotation.RetentionPolicy",
+                    "CLASS",
+                    "value")
+            );
+
+            attributeSet.addAnnotation(tanga(
+                    constPool,
+                    "java.lang.annotation.Target",
+                    "java.lang.annotation.ElementType",
+                    "CONSTRUCTOR",
+                    "value")
+            );
+
+            classFile.addAttribute(attributeSet);
+        }
+
+
+
+    }
+
+    private javassist.bytecode.annotation.Annotation
+    builEnumdAnnotation(ConstPool constPool, String type, String enumType, String enumValue, String attrName){
+
+        javassist.bytecode.annotation.Annotation annotation =
+                new javassist.bytecode.annotation.Annotation(type, constPool);
+
+        EnumMemberValue enumMemberValue = new EnumMemberValue(constPool);
+        enumMemberValue.setType(enumType);
+        enumMemberValue.setValue(enumValue);
+
+        annotation.addMemberValue(attrName, enumMemberValue);
+        return annotation;
+    }
+
+    private javassist.bytecode.annotation.Annotation
+        tanga(ConstPool constPool, String type, String enumType, String enumValue, String attrName){
+
+        javassist.bytecode.annotation.Annotation annotation =
+                new javassist.bytecode.annotation.Annotation(type, constPool);
+
+        ArrayMemberValue arrayMemberValue = new ArrayMemberValue(constPool);
+
+        MemberValue[] elements = new MemberValue[1];
+        EnumMemberValue enumMemberValue = new EnumMemberValue(constPool);
+        enumMemberValue.setType(enumType);
+        enumMemberValue.setValue(enumValue);
+
+        elements[0] = enumMemberValue;
+
+        arrayMemberValue.setValue(elements);
+
+        annotation.addMemberValue(attrName, arrayMemberValue);
+       return annotation;
     }
 
 }

@@ -2,6 +2,7 @@ package ist.meic.pa;
 
 import javassist.*;
 
+import java.io.IOException;
 import java.util.TreeMap;
 
 class ConstructorAdapter {

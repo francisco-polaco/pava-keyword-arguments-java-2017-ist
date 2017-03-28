@@ -1,8 +1,20 @@
 package ist.meic.pa;
 
 import javassist.ClassPool;
+import javassist.CtClass;
 import javassist.Loader;
 import javassist.Translator;
+import javassist.bytecode.*;
+import javassist.bytecode.annotation.ClassMemberValue;
+import javassist.bytecode.annotation.EnumMemberValue;
+import javassist.bytecode.annotation.MemberValue;
+import javassist.bytecode.annotation.StringMemberValue;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 
 public class KeyConstructorsExtended {
 
@@ -31,4 +43,6 @@ public class KeyConstructorsExtended {
             else throw ex;
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-<project name="keyConstructors" basedir="." default="jar">
+<project name="keyConstructorsExtended" basedir="." default="jar">
 
     <property name="src.dir" value="src"/>
     <property name="test.dir" value="Tests"/>
@@ -36,7 +36,7 @@
 
     <target name="run" depends="jar">
         <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
-            <arg line="TestA"/>
+            <arg line="TestRepeated"/>
         </java>
     </target>
 </project>
