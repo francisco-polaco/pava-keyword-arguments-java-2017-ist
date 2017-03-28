@@ -73,20 +73,19 @@ class TemplateMaker {
         int open = 0;
         for (String keyword : keywords) {
             if (keyword.contains("(") && keyword.contains(")")) {
-                if(countOf(keyword, "(") == countOf(keyword, ")"))
+                if (countOf(keyword, "(") == countOf(keyword, ")"))
                     res.add(keyword);
-                else{
+                else {
                     open += countOf(keyword, "(");
                     open -= countOf(keyword, ")");
                     build += keyword;
                 }
-
             } else if (keyword.contains("(")) {
-                open+= countOf(keyword, "(");
+                open += countOf(keyword, "(");
                 build += keyword;
             } else if (keyword.contains(")")) {
                 if (open <= 0) throw new RuntimeException("Parenthesis don't match.");
-                open -= countOf(keyword, ")") ;
+                open -= countOf(keyword, ")");
                 build += keyword;
             }
             if (open == 0) {
