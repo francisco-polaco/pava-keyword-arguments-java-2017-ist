@@ -1,6 +1,13 @@
 package ist.meic.pa;
 
 import javassist.*;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.ClassFile;
+import javassist.bytecode.ConstPool;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.ArrayMemberValue;
+import javassist.bytecode.annotation.EnumMemberValue;
+import javassist.bytecode.annotation.MemberValue;
 
 import java.util.ArrayList;
 
@@ -30,6 +37,73 @@ public class KeyConstructorsTranslator implements Translator {
             else if (!constructor.getSignature().equals("()V"))
                 targetClass.addConstructor(CtNewConstructor.defaultConstructor(targetClass));
         }
+        removeAnnotationInRuntime(classPool);
+    }
+
+    private void removeAnnotationInRuntime(ClassPool classPool) throws NotFoundException {
+        CtClass ctClass = classPool.get("ist.meic.pa.KeywordArgs");
+        ClassFile classFile = ctClass.getClassFile();
+
+        if (classFile.getAttribute("RuntimeVisibleAnnotations") != null) {
+            ConstPool constPool = classFile.getConstPool();
+
+            // remove the old annotations
+            classFile.removeAttribute("RuntimeVisibleAnnotations");
+
+            AnnotationsAttribute attributeSet =
+                    new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+
+            attributeSet.addAnnotation(buildRetentionAnnotation(
+                    constPool,
+                    "java.lang.annotation.Retention",
+                    "java.lang.annotation.RetentionPolicy",
+                    "CLASS",
+                    "value")
+            );
+
+            attributeSet.addAnnotation(buildTargetAnnotation(
+                    constPool,
+                    "java.lang.annotation.Target",
+                    "java.lang.annotation.ElementType",
+                    "CONSTRUCTOR",
+                    "value")
+            );
+
+            classFile.addAttribute(attributeSet);
+        }
+    }
+
+    private Annotation buildRetentionAnnotation(ConstPool constPool, String type, String enumType,
+                                                String enumValue, String attrName) {
+        Annotation annotation =
+                new Annotation(type, constPool);
+
+        EnumMemberValue enumMemberValue = new EnumMemberValue(constPool);
+        enumMemberValue.setType(enumType);
+        enumMemberValue.setValue(enumValue);
+
+        annotation.addMemberValue(attrName, enumMemberValue);
+        return annotation;
+    }
+
+    private Annotation buildTargetAnnotation(ConstPool constPool, String type, String enumType,
+                                             String enumValue, String attrName) {
+        Annotation annotation =
+                new Annotation(type, constPool);
+
+        ArrayMemberValue arrayMemberValue = new ArrayMemberValue(constPool);
+
+        MemberValue[] elements = new MemberValue[1];
+        EnumMemberValue enumMemberValue = new EnumMemberValue(constPool);
+        enumMemberValue.setType(enumType);
+        enumMemberValue.setValue(enumValue);
+
+        elements[0] = enumMemberValue;
+
+        arrayMemberValue.setValue(elements);
+
+        annotation.addMemberValue(attrName, arrayMemberValue);
+        return annotation;
     }
 
     private void getAllKeywordArgs(CtClass auxClass, ArrayList<String> keyWords) throws NotFoundException {

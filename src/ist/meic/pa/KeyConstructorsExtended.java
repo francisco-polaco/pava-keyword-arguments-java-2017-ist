@@ -4,12 +4,12 @@ import javassist.ClassPool;
 import javassist.Loader;
 import javassist.Translator;
 
-public class KeyConstructors {
+public class KeyConstructorsExtended {
 
     public static void main(String[] args) throws Throwable {
         if (args.length != 1) {
             System.out.println("Invalid arguments!");
-            System.out.println("Usage: java " + KeyConstructors.class.getCanonicalName() + " <classname>");
+            System.out.println("Usage: java " + KeyConstructorsExtended.class.getCanonicalName() + " <classname>");
             return;
         }
         Translator keyConstructorsTranslator = new KeyConstructorsTranslator();
