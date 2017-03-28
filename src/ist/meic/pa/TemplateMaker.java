@@ -73,13 +73,20 @@ class TemplateMaker {
         int open = 0;
         for (String keyword : keywords) {
             if (keyword.contains("(") && keyword.contains(")")) {
-                res.add(keyword);
+                if(countOf(keyword, "(") == countOf(keyword, ")"))
+                    res.add(keyword);
+                else{
+                    open += countOf(keyword, "(");
+                    open -= countOf(keyword, ")");
+                    build += keyword;
+                }
+
             } else if (keyword.contains("(")) {
-                open++;
+                open+= countOf(keyword, "(");
                 build += keyword;
             } else if (keyword.contains(")")) {
                 if (open <= 0) throw new RuntimeException("Parenthesis don't match.");
-                open--;
+                open -= countOf(keyword, ")") ;
                 build += keyword;
             }
             if (open == 0) {
@@ -88,6 +95,10 @@ class TemplateMaker {
             } else build += ",";
         }
         return res;
+    }
+
+    private int countOf(String keyword, String c) {
+        return keyword.length() - keyword.replace(c, "").length();
     }
 
     private void parseKeyword(TreeMap<String, String> keywordArgs, String keyword) {
